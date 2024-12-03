@@ -35,5 +35,4 @@ docker run --cap-add net_raw --cap-add net_admin --name=php-fpm   -v .:/var/www/
 ## Nuggets
 
 - The regex pattern used for the classification of appointments is \
-.*[tT]ermin (für einen|für eine|für einen|für ein|für|zum|zur|zu einem|zu ein|zum|zu)[-\s]*([A-Za-z-äöüÄÖÜßé]+[\-\'\s]?[a-zA-Z-\säöüÄÖÜßé]+)$
 
