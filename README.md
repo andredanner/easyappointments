@@ -1,111 +1,39 @@
-<h1 align="center">
-    <br>
-    <a href="https://easyappointments.org">
-        <img src="https://raw.githubusercontent.com/alextselegidis/easyappointments/develop/logo.png" alt="Easy!Appointments" width="150">
-    </a>
-    <br>
-    Easy!Appointments
-    <br>
-</h1>
+  :sparkles:  :muscle: :muscle: :muscle:   :sparkles: 
+#How to set up easyappointments!
 
-<br>
+This is the home of the intellectual property of co-brainers.
 
-<h4 align="center">
-    A powerful Open Source Appointment Scheduler that can be installed on your server. 
-</h4>
 
-<p align="center">
-  <img alt="GitHub" src="https://img.shields.io/github/license/alextselegidis/easyappointments?style=for-the-badge">
-  <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alextselegidis/easyappointments?style=for-the-badge">
-  <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/alextselegidis/easyappointments/total?style=for-the-badge">
-  <a href="https://discord.com/invite/UeeSkaw">
-    <img alt="Chat On Discord" src="https://img.shields.io/badge/chat-on%20discord-7289da?style=for-the-badge&logo=discord&logoColor=white">
-  </a>
-</p>
+## Components
 
-<p align="center">
-  <a href="#about">About</a> •
-  <a href="#features">Features</a> •
-  <a href="#setup">Setup</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#license">License</a>
-</p>
+nginx: Webserver and loadbalancer, listens at port 80 to route into the appointments backend
 
-![screenshot](screenshot.png)
+PHP-FPM (FastCGI Process Manager) ist eine alternative Implementierung von PHPs FastCGI, die für besonders stark frequentierte Websites und Anwendungen entwickelt wurde. Es handelt sich um eine Komponente, die PHP-Skripte effizienter ausführen kann, indem sie eine Verbindung zwischen dem Webserver und PHP herstellt. Hier sind die wichtigsten Merkmale und Funktionen von PHP-FPM:
+Wie funktioniert PHP-FPM in einem typischen Setup?
+Webserver (z. B. Nginx, Apache) empfängt HTTP-Anfragen.
+Der Webserver reicht PHP-Skripte an PHP-FPM weiter, indem er sie an einen FastCGI-Socket sendet.
+PHP-FPM verarbeitet die Skripte und liefert die Ergebnisse (HTML, JSON, usw.) an den Webserver zurück.
+Der Webserver gibt die Antwort an den Client (Browser, API-Aufrufer) weiter.
 
-## About
-
-**Easy!Appointments** is a highly customizable web application that allows customers to book appointments with you 
-via a sophisticated web interface. Moreover, it provides the ability to sync your data with Google Calendar so you can 
-use them with other services. It is an open source project that you can download and install **even for commercial use**. 
-Easy!Appointments will run smoothly with your existing website as it can be installed in a single folder of the 
-server and of course share an existing database.
-
-## Features
-
-The application is designed to be flexible enough so that it can handle any enterprise work flow. 
-
-* Customers and appointments management.
-* Services and providers organization.
-* Working plan and booking rules.
-* Google Calendar synchronization.
-* Email notifications system.
-* Self hosted installation.
-* Translated user interface.
-* User community support. 
-
-## Setup
-
-To clone and run this application, you'll need [Git](https://git-scm.com), [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) and [Composer](https://getcomposer.org) installed on your computer. From your command line:
-
-```bash
-# Clone this repository
-$ git clone https://github.com/alextselegidis/easyappointments.git
-
-# Go into the repository
-$ cd easyappointments
-
-# Install dependencies
-$ npm install && composer install
-
-# Start the file watcher
-$ npm start
-```
-
-Note: If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
-
-You can build the files by running `npm run build`. This command will bundle everything to a `build` directory.
+mysql-DB-Server: Host für unsere DB Instanzen - jeder Kunde hat eine eigene Instanz
 
 ## Installation
 
-You will need to perform the following steps to install the application on your server:
+Alle Komponenten werden als Docker-Container aufgesetzt, wobei wir nur das Dockerfile des php-fpm für das bauen
+eines Images benutzen.
 
-* Make sure that your server has Apache/Nginx, PHP (8.2+) and MySQL installed.
-* Create a new database (or use an existing one).
-* Copy the "easyappointments" source folder on your server.
-* Make sure that the "storage" directory is writable.
-* Rename the "config-sample.php" file to "config.php" and update its contents based on your environment.
-* Open the browser on the Easy!Appointments URL and follow the installation guide.
+Nginx und mysql sind bei Basisimages, die wir 1:1 nutzen, wie auf dem Docker-Hub verfügbar.
 
-That's it! You can now use Easy!Appointments at your will.
+###
+```bash
+https://github.com/alextselegidis/easyappointments
+docker build -t appointments:v1.5_01 ./docker/php-fpm
+docker run --cap-add net_raw --cap-add net_admin --name=php-fpm   -v .:/var/www/html   -e LOG_LEVEL=debug --network=mynet   -e DB_HOST=mysql -e DB_NAME=mysql   -e DB_USERNAME=root -e DB_PASSWORD=Zumwinkel123@   -d appointments:v1.5_01
 
-You will find the latest release at [easyappointments.org](https://easyappointments.org).
-If you have problems installing or configuring the application visit the
-[official support group](https://groups.google.com/forum/#!forum/easy-appointments).
-You can also report problems on the [issues page](https://github.com/alextselegidis/easyappointments/issues)
-and help the development progress.
+```
 
-## License 
+## Nuggets
 
-Code Licensed Under [GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) | Content Under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)
+- The regex pattern used for the classification of appointments is \
+.*[tT]ermin (für einen|für eine|für einen|für ein|für|zum|zur|zu einem|zu ein|zum|zu)[-\s]*([A-Za-z-äöüÄÖÜßé]+[\-\'\s]?[a-zA-Z-\säöüÄÖÜßé]+)$
 
----
-
-Website [alextselegidis.com](https://alextselegidis.com) &nbsp;&middot;&nbsp;
-GitHub [alextselegidis](https://github.com/alextselegidis) &nbsp;&middot;&nbsp;
-Twitter [@alextselegidis](https://twitter.com/AlexTselegidis)
-
-###### More Projects On Github
-###### ⇾ [Plainpad &middot; Self Hosted Note Taking App](https://github.com/alextselegidis/plainpad)
-###### ⇾ [Questionful &middot; Web Questionnaires Made Easy](https://github.com/alextselegidis/questionful)
-###### ⇾ [Integravy &middot; Service Orchestration At Your Fingertips](https://github.com/alextselegidis/integravy)
